@@ -8,6 +8,12 @@
 
 # MerkleTree.php
 
+Install 
+
+```bash
+composer require hxfjsw/merkletreephp
+```
+
 ## Getting started
 
 Construct tree, generate proof
