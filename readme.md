@@ -52,6 +52,15 @@ echo "proof:" . json_encode($proof) . PHP_EOL;
 ```
 
 
+Output:
+
+```bash
+root:0xdb44a1f32851683f64d15a563ecd3686b67de2075821b6196dbaf7d25604592f
+leaf:0x6dC0c0be4c8B2dFE750156dc7d59FaABFb5B923D
+proof:["0x7fa4f9a213fc25511745e0fe7627ab0d7145664238bd854fb781559c2ddbf9c4"]
+```
+
+
 ## Diagrams
 
 ▾ Visualization of Merkle Tree
