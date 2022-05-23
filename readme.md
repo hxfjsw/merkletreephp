@@ -20,10 +20,10 @@ Construct tree, generate proof
 
 ```php
 <?php
-
 use MerkleTreePhp\Buffer;
 use MerkleTreePhp\MerkleTree;
 use MerkleTreePhp\Options;
+use Web3\Utils;
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -32,17 +32,12 @@ $whitelistAddress = [
     '0xa8d17cc9caf29af964d19267ddeb4dff122697b0'
 ];
 
-$leafNodes = array_map(function ($address) {
-    return \Web3\Utils::sha3($address);
-}, $whitelistAddress);
+$leafNodes = array_map(fn($address) => Utils::sha3($address), $whitelistAddress);
 
 $options = new Options();
 $options->sortPairs = true;
 
-$hashFn = function (Buffer $bf) {
-    $hash = \Web3\Utils::sha3('0x' . $bf->toHex());
-    return Buffer::fromHex($hash);
-};
+$hashFn = fn(Buffer $bf) => Buffer::fromHex(Utils::sha3('0x' . $bf->toHex()));
 
 $merkleTree = new MerkleTree($leafNodes, $hashFn, $options);
 
@@ -52,7 +47,7 @@ echo "root:" . $root . PHP_EOL;
 $leaf = $whitelistAddress[0];
 echo "leaf:" . $leaf . PHP_EOL;
 
-$proof = $merkleTree->getHexProof(\Web3\Utils::sha3($leaf));
+$proof = $merkleTree->getHexProof(Utils::sha3($leaf));
 echo "proof:" . json_encode($proof) . PHP_EOL;
 
 ```
