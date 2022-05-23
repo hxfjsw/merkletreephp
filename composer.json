@@ -1,0 +1,14 @@
+{
+  "name": "hxfjsw/merkletreephp",
+  "autoload": {
+    "psr-4": {
+      "MerkleTreePhp\\": "src/"
+    }
+  },
+  "authors": [
+  ],
+  "require": {
+    "php": ">=8.0.0",
+    "web3p/web3.php": "^0.1.6"
+  }
+}
