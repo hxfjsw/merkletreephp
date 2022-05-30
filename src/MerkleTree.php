@@ -30,6 +30,7 @@ class MerkleTree extends Base
      * @param string[] $leaves
      * @param callable $hashFn
      * @param Options $options
+     * @throws \Exception
      */
     public function __construct(array $leaves, callable $hashFn, Options $options)
     {
@@ -39,6 +40,17 @@ class MerkleTree extends Base
         $this->hashLeaves = !!$options->hashLeaves;
         $this->sortLeaves = !!$options->sortLeaves;
         $this->sortPairs = !!$options->sortPairs;
+
+        if ($options->fillDefaultHash) {
+
+            if (is_callable($options->fillDefaultHash)) {
+                $this->fillDefaultHash = $options->fillDefaultHash;
+            } else if (Buffer::isBuffer($options->fillDefaultHash) || is_string($options->fillDefaultHash)) {
+                //todo
+            } else {
+                throw new \Exception('method "fillDefaultHash" must be a function, Buffer, or string');
+            }
+        }
 
         $this->sort = !!$options->sort;
 
@@ -70,9 +82,14 @@ class MerkleTree extends Base
         }
 
         if ($this->fillDefaultHash) {
-            //todo
+            for ($i = 0; $i < pow(2, ceil(log(count($this->leaves, 2)))); $i++) {
+                if ($i >= count($this->leaves)) {
+                    $this->leaves[] = $this->bufferify(
+                        call_user_func($this->fillDefaultHash, $i, $this->hashFn)
+                    );
+                }
+            }
         }
-
 
         $this->layers = [$this->leaves];
         $this->_createHashes($this->leaves);
@@ -137,7 +154,7 @@ class MerkleTree extends Base
 
     public function getProof($leaf, $index): array
     {
-        if($leaf === null){
+        if ($leaf === null) {
             throw new \Exception("leaf is required'");
         }
 
