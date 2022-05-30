@@ -3,26 +3,23 @@
 namespace MerkleTreePhp;
 
 
+use Exception;
+
 class MerkleTree extends Base
 {
 
-    private $duplicateOdd = false;
+    private bool $duplicateOdd = false;
     private $hashFn = null;
-    private $hashLeaves = false;
-    private $isBitcoinTree = false;
-    /**
-     * @var Buffer[]
-     */
+    private bool $hashLeaves;
+    private bool $isBitcoinTree;
+    /** @var Buffer[] */
+    private array $leaves = [];
+    /** @var Buffer[] */
+    private array $layers = [];
 
-    private $leaves = [];
-    /**
-     * @var Buffer[]
-     */
-    private $layers = [];
-
-    private $sortLeaves = false;
-    private $sortPairs = false;
-    private $sort = false;
+    private bool $sortLeaves;
+    private bool $sortPairs;
+    private bool $sort = false;
 
     private $fillDefaultHash = null;
 
@@ -30,7 +27,7 @@ class MerkleTree extends Base
      * @param string[] $leaves
      * @param callable $hashFn
      * @param Options $options
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(array $leaves, callable $hashFn, Options $options)
     {
@@ -48,7 +45,7 @@ class MerkleTree extends Base
             } else if (Buffer::isBuffer($options->fillDefaultHash) || is_string($options->fillDefaultHash)) {
                 //todo
             } else {
-                throw new \Exception('method "fillDefaultHash" must be a function, Buffer, or string');
+                throw new Exception('method "fillDefaultHash" must be a function, Buffer, or string');
             }
         }
 
@@ -78,7 +75,7 @@ class MerkleTree extends Base
         }, $leaves);
 
         if ($this->sortLeaves) {
-            $this->leaves = sort($this->leaves);
+            sort($this->leaves);
         }
 
         if ($this->fillDefaultHash) {
@@ -104,7 +101,6 @@ class MerkleTree extends Base
             for ($i = 0; $i < count($nodes); $i += 2) {
                 if ($i + 1 === count($nodes)) {
                     $data = $nodes[count($nodes) - 1];
-                    $hash = $data;
                     if ($this->isBitcoinTree) {
                         $data = Buffer::concat([$data->reverse(), $data->reverse()]);
                         $hash = call_user_func($this->hashFn, $data);
@@ -154,10 +150,13 @@ class MerkleTree extends Base
         return $this->bufferToHex($this->getRoot());
     }
 
+    /**
+     * @throws Exception
+     */
     public function getProof($leaf, $index): array
     {
         if ($leaf === null) {
-            throw new \Exception("leaf is required'");
+            throw new Exception("leaf is required'");
         }
 
         $leaf = $this->bufferify($leaf);
@@ -200,6 +199,9 @@ class MerkleTree extends Base
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function getHexProof(string $leaf, $index = null): array
     {
         $arr = $this->getProof($leaf, $index);
