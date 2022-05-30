@@ -16,6 +16,10 @@ class Options
     public ?bool $sortPairs = false;
     /** If set to `true`, the leaves and hashing pairs will be sorted. */
     public ?bool $sort = false;
-    /** If defined, the resulting hash of this function will be used to fill in odd numbered layers. */
-//fillDefaultHash?: TFillDefaultHash | Buffer | string
+
+    /**
+     * If defined, the resulting hash of this function will be used to fill in odd numbered layers.
+     * @var Callable | Buffer | string
+     */
+    public mixed $fillDefaultHash = null;
 }

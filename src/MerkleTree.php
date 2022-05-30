@@ -123,7 +123,7 @@ class MerkleTree extends Base
                 $data = null;
                 $combined = null;
                 if ($this->isBitcoinTree) {
-//                    combined = [buffer_reverse_1.default(left), buffer_reverse_1.default(right)];
+                    $combined = [$left->reverse(), $right->reverse()];
                 } else {
                     $combined = [$left, $right];
                 }

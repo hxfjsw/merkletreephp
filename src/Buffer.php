@@ -62,6 +62,19 @@ class Buffer
         return new Buffer(substr($hexString, 2), 'hex');
     }
 
+    public static function isBuffer(mixed $obj):bool
+    {
+        //todo
+        return false;
+    }
+
+    public function reverse(): Buffer
+    {
+        $new_buffer = Buffer::from([]);
+        $new_buffer->buffer = array_reverse($this->buffer);
+        return $new_buffer;
+    }
+
 
     public function toHex(): string
     {
