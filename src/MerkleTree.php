@@ -83,15 +83,20 @@ class MerkleTree extends Base
     {
         while (count($nodes) > 1) {
             $layerIndex = count($this->layers);
-
             $this->layers[] = [];
-
             for ($i = 0; $i < count($nodes); $i += 2) {
                 if ($i + 1 === count($nodes)) {
                     $data = $nodes[count($nodes) - 1];
                     $hash = $data;
                     if ($this->isBitcoinTree) {
-
+                        continue;
+                    } else {
+                        if ($this->duplicateOdd) {
+                            // continue with creating layer
+                        } else {
+                            $this->layers[$layerIndex][] = $nodes[$i];
+                            continue;
+                        }
                     }
 
 
@@ -132,6 +137,10 @@ class MerkleTree extends Base
 
     public function getProof($leaf, $index): array
     {
+        if($leaf === null){
+            throw new \Exception("leaf is required'");
+        }
+
         $leaf = $this->bufferify($leaf);
 
         $proof = [];
@@ -149,7 +158,7 @@ class MerkleTree extends Base
             return [];
         }
 
-        for ($i = 0; $i < count($this->leaves); $i++) {
+        for ($i = 0; $i < count($this->layers); $i++) {
             $layer = $this->layers[$i];
             $isRightNode = $index % 2;
 
