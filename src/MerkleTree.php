@@ -106,6 +106,10 @@ class MerkleTree extends Base
                     $data = $nodes[count($nodes) - 1];
                     $hash = $data;
                     if ($this->isBitcoinTree) {
+                        $data = Buffer::concat([$data->reverse(), $data->reverse()]);
+                        $hash = call_user_func($this->hashFn, $data);
+                        $hash = $hash->reverse();
+                        $this->layers[$layerIndex][] = $hash;
                         continue;
                     } else {
                         if ($this->duplicateOdd) {
@@ -115,8 +119,6 @@ class MerkleTree extends Base
                             continue;
                         }
                     }
-
-
                 }
                 $left = $nodes[$i];
                 $right = $i + 1 === count($nodes) ? $left : $nodes[$i + 1];
