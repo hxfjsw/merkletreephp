@@ -192,7 +192,8 @@ class MerkleTree extends Base
                     "data" => $layer[$pairIndex]
                 ]);
             }
-
+            // set index to parent index
+            $index = ($index / 2) | 0;
         }
 
         return $proof;
