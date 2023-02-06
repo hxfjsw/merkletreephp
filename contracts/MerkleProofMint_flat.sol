@@ -174,6 +174,29 @@ contract MerkleProofMint is Ownable {
         return true;
     }
 
+
+    function safeMint2(bytes32[] memory proof,address  addr,string calldata data) external view returns (bool){
+        require(isValid(proof, keccak256(abi.encodePacked(addr,data))), "invalid proof");
+        return true;
+    }
+
+
+    event Deposit(address indexed _from, string data);
+
+
+    function safeMint3(bytes32[] memory proof,address  addr,string calldata data) external  returns (bool){
+        require(isValid(proof, keccak256(abi.encodePacked(addr,data))), "invalid proof");
+        emit Deposit(addr,data);
+
+
+        return true;
+    }
+
+    function test(address  addr,string calldata data)  external view  returns ( bytes32){
+        return keccak256(abi.encodePacked(addr,data));
+    }
+
+
 }
 
 

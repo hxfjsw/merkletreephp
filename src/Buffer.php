@@ -14,10 +14,14 @@ class Buffer
 
     public function __construct($hexString, $type = 'hex')
     {
-        $this->buffer = match ($type) {
-            'hex' => array_map('hexdec', str_split($hexString, 2)),
-            'empty' => [],
-        };
+        if($hexString==''){
+
+        }else {
+            $this->buffer = match ($type) {
+                'hex' => array_map('hexdec', str_split($hexString, 2)),
+                'empty' => [],
+            };
+        }
     }
 
     public static function compare(Buffer $a, Buffer $b): int
@@ -83,5 +87,13 @@ class Buffer
             $hex_str .= sprintf("%02x", $byte);
         }
         return $hex_str;
+    }
+
+    public static function __set_state($array){
+        $ab = new Buffer('');
+
+        $ab->buffer = $array['buffer'];
+
+        return $ab;
     }
 }

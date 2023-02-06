@@ -1,30 +1,34 @@
 <?php
+
 use MerkleTreePhp\Buffer;
 use MerkleTreePhp\MerkleTree;
 use MerkleTreePhp\Options;
+use phpseclib\Math\BigInteger;
 use Web3\Utils;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$whitelistAddress = [
-    '0x6dC0c0be4c8B2dFE750156dc7d59FaABFb5B923D',
-    '0xa8d17cc9caf29af964d19267ddeb4dff122697b0'
-];
+require __DIR__.'/leaves.php';
 
-$leafNodes = array_map(fn($address) => Utils::sha3($address), $whitelistAddress);
+echo "start\n";
 
 $options = new Options();
 $options->sortPairs = true;
 
 $hashFn = fn(Buffer $bf) => Buffer::fromHex(Utils::sha3('0x' . $bf->toHex()));
+$merkleTree = new MerkleTree([], $hashFn, $options);
+$merkleTree->setLeaves($leaves);
+//print_r($merkleTree);
 
-$merkleTree = new MerkleTree($leafNodes, $hashFn, $options);
-
-$root = $merkleTree->getHexRoot();
-echo "root:" . $root . PHP_EOL;
-
-$leaf = $whitelistAddress[0];
-echo "leaf:" . $leaf . PHP_EOL;
-
-$proof = $merkleTree->getHexProof(Utils::sha3($leaf));
-echo "proof:" . json_encode($proof) . PHP_EOL;
+//$root = $merkleTree->getHexRoot();
+//echo "root: " . $root . PHP_EOL;
+//
+$leaf = '0xc7b673913e13035b725c553b8d72a41019a0b281ca716f502426bd2269d42e4e';//$whitelistAddress[0];
+echo "leaf: " . $leaf . PHP_EOL;
+//
+$start_time = microtime(true);
+//
+$proof = $merkleTree->getHexProof($leaf);
+echo "proof: " . json_encode($proof) . PHP_EOL;
+//
+echo "time used:" . microtime(true) - $start_time . " seconds";
