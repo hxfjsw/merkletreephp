@@ -227,6 +227,24 @@ class MerkleTree extends Base
         $this->leaves = $leaves;
     }
 
+    /**
+     * @return Buffer[]
+     */
+    public function getLayers(): array
+    {
+        return $this->layers;
+    }
+
+    /**
+     * @param Buffer[] $layers
+     */
+    public function setLayers(array $layers): void
+    {
+        $this->layers = $layers;
+    }
+
+
+
 
 
 }
