@@ -156,7 +156,6 @@ library MerkleProof {
 }
 
 
-
 contract MerkleProofMint is Ownable {
 
     bytes32 public root;
@@ -175,25 +174,26 @@ contract MerkleProofMint is Ownable {
     }
 
 
-    function safeMint2(bytes32[] memory proof,address  addr,string calldata data) external view returns (bool){
-        require(isValid(proof, keccak256(abi.encodePacked(addr,data))), "invalid proof");
+    function safeMint2(bytes32[] memory proof, address addr, string calldata data) external view returns (bool){
+        require(isValid(proof, keccak256(abi.encodePacked(addr, data))), "invalid proof");
         return true;
     }
 
 
     event Deposit(address indexed _from, string data);
 
+    mapping(address => uint256) public exchanger;
 
-    function safeMint3(bytes32[] memory proof,address  addr,string calldata data) external  returns (bool){
-        require(isValid(proof, keccak256(abi.encodePacked(addr,data))), "invalid proof");
-        emit Deposit(addr,data);
-
-
+    function safeMint3(bytes32[] memory proof, address addr, string calldata data) external returns (bool){
+        require(isValid(proof, keccak256(abi.encodePacked(addr, data))), "invalid proof");
+        require(_exchanger[addr] == 0, "already exchanged");
+        exchanger[addr] = block.timestamp;
+        emit Deposit(addr, data);
         return true;
     }
 
-    function test(address  addr,string calldata data)  external view  returns ( bytes32){
-        return keccak256(abi.encodePacked(addr,data));
+    function test(address addr, string calldata data) external view returns (bytes32){
+        return keccak256(abi.encodePacked(addr, data));
     }
 
 
